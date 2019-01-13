@@ -13,11 +13,11 @@ public class PlayerController : MonoBehaviour
     
     [SerializeField]
     [Header("First point view camera position")]
-    private Transform fpv = null;
+    private Transform firstPointView = null;
 
     [SerializeField]
     [Header("Third point view camera position")]
-    private Transform tpv = null;
+    private Transform thirdPointView = null;
 
     private bool firstPointViewEnabled;
 
@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
             firstPointViewEnabled = !firstPointViewEnabled;
         }
 
-        var newCameraViewTransform = firstPointViewEnabled ? tpv : fpv;
+        var newCameraViewTransform = firstPointViewEnabled ? thirdPointView : firstPointView;
         Camera.main.transform.position = newCameraViewTransform.position;
         Camera.main.transform.rotation = newCameraViewTransform.rotation;
 

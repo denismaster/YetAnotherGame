@@ -201,7 +201,7 @@ GameObject:
   m_Component:
   - component: {fileID: 116611814}
   m_Layer: 0
-  m_Name: TPV
+  m_Name: ThirdPointView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -300,7 +300,7 @@ GameObject:
   m_Component:
   - component: {fileID: 177813404}
   m_Layer: 0
-  m_Name: FPV
+  m_Name: FirstPointView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -418,8 +418,8 @@ MonoBehaviour:
   speed: 6
   jumpSpeed: 8
   gravity: 20
-  fpv: {fileID: 0}
-  tpv: {fileID: 0}
+  firstPointView: {fileID: 0}
+  thirdPointView: {fileID: 0}
 --- !u!1 &2044193072
 GameObject:
   m_ObjectHideFlags: 0
@@ -531,8 +531,8 @@ MonoBehaviour:
   speed: 6
   jumpSpeed: 8
   gravity: 20
-  fpv: {fileID: 177813404}
-  tpv: {fileID: 116611814}
+  firstPointView: {fileID: 177813404}
+  thirdPointView: {fileID: 116611814}
 --- !u!143 &2044193078
 CharacterController:
   m_ObjectHideFlags: 0
