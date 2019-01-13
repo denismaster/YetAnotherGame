@@ -36,3 +36,5 @@ sysinfo.txt
 *.unitypackage
 YetAnotherGame.exe
 YetAnotherGameBuild/*
+YetAnotherGame_Data/Managed/*
+YetAnotherGame_Data/Resources/*
