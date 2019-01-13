@@ -10,16 +10,33 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 moveDirection = Vector3.zero;
     private CharacterController controller;
+    
+    [SerializeField]
+    [Header("First point view camera position")]
+    private Transform fpv = null;
 
-    // Start is called before the first frame update
+    [SerializeField]
+    [Header("Third point view camera position")]
+    private Transform tpv = null;
+
+    private bool firstPointViewEnabled;
+
     private void Start()
     {
         controller = GetComponent<CharacterController>();
     }
 
-    // Update is called once per frame
     private void Update()
     {
+        if(Input.GetButtonDown(Constants.ChangeView))
+        {
+            firstPointViewEnabled = !firstPointViewEnabled;
+        }
+
+        var newCameraViewTransform = firstPointViewEnabled ? tpv : fpv;
+        Camera.main.transform.position = newCameraViewTransform.position;
+        Camera.main.transform.rotation = newCameraViewTransform.rotation;
+
         if (controller.isGrounded)
         {
             // We are grounded, so recalculate
