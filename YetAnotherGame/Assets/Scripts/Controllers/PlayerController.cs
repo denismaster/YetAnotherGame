@@ -1,61 +1,145 @@
-﻿using System.Collections;
+﻿using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float speed = 6.0f;
-    public float jumpSpeed = 8.0f;
-    public float gravity = 20.0f;
+    [SerializeField] private float m_moveSpeed = 2;
+    [SerializeField] private float m_turnSpeed = 150;
+    [SerializeField] private float m_jumpForce = 4;
+    [SerializeField] private Animator m_animator = null;
+    [SerializeField] private Rigidbody m_rigidBody = null;
 
-    private Vector3 moveDirection = Vector3.zero;
-    private CharacterController controller;
-    
-    [SerializeField]
-    [Header("First point view camera position")]
-    private Transform firstPointView = null;
+    private float m_currentV = 0;
+    private float m_currentH = 0;
 
-    [SerializeField]
-    [Header("Third point view camera position")]
-    private Transform thirdPointView = null;
+    private readonly float m_interpolation = 10;
+    private readonly float m_walkScale = 0.33f;
+    private readonly float m_backwardsWalkScale = 0.16f;
+    private readonly float m_backwardRunScale = 0.66f;
+    private float m_jumpTimeStamp = 0;
+    private float m_minJumpInterval = 0.25f;
 
-    private bool firstPointViewEnabled;
+    private bool m_wasGrounded;
+    private bool m_isGrounded;
+
+    private Vector3 m_currentDirection = Vector3.zero;
+    private List<Collider> m_collisions = new List<Collider>();
 
     private void Start()
     {
-        controller = GetComponent<CharacterController>();
+        Cursor.visible = false;
     }
 
-    private void Update()
+    private void OnCollisionEnter(Collision collision)
     {
-        if(Input.GetButtonDown(InputConstants.ChangeView))
+        ContactPoint[] contactPoints = collision.contacts;
+        for(int i = 0; i < contactPoints.Length; i++)
         {
-            firstPointViewEnabled = !firstPointViewEnabled;
-        }
-
-        var newCameraViewTransform = firstPointViewEnabled ? thirdPointView : firstPointView;
-        Camera.main.transform.position = newCameraViewTransform.position;
-        Camera.main.transform.rotation = newCameraViewTransform.rotation;
-
-        if (controller.isGrounded)
-        {
-            // We are grounded, so recalculate
-            // move direction directly from axes
-
-            moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
-            moveDirection = transform.TransformDirection(moveDirection);
-            moveDirection = moveDirection * speed;
-
-            if (Input.GetButton("Jump"))
+            if (Vector3.Dot(contactPoints[i].normal, Vector3.up) > 0.5f)
             {
-                moveDirection.y = jumpSpeed;
+                if (!m_collisions.Contains(collision.collider)) {
+                    m_collisions.Add(collision.collider);
+                }
+                m_isGrounded = true;
+            }
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        ContactPoint[] contactPoints = collision.contacts;
+        bool validSurfaceNormal = false;
+        for (int i = 0; i < contactPoints.Length; i++)
+        {
+            if (Vector3.Dot(contactPoints[i].normal, Vector3.up) > 0.5f)
+            {
+                validSurfaceNormal = true;                
+                break;
             }
         }
 
-        // Apply gravity
-        moveDirection.y = moveDirection.y - (gravity * Time.deltaTime);
+        if(validSurfaceNormal)
+        {
+            m_isGrounded = true;
+            if (!m_collisions.Contains(collision.collider))
+            {
+                m_collisions.Add(collision.collider);
+            }
+        } 
+        else
+        {
+            if (m_collisions.Contains(collision.collider))
+            {
+                m_collisions.Remove(collision.collider);
+            }
+            if (m_collisions.Count == 0) 
+            { 
+                m_isGrounded = false; 
+            }
+        }
+    }
 
-        // Move the controller
-        controller.Move(moveDirection * Time.deltaTime);
+    private void OnCollisionExit(Collision collision)
+    {
+        if(m_collisions.Contains(collision.collider))
+        {
+            m_collisions.Remove(collision.collider);
+        }
+        if (m_collisions.Count == 0)
+        { 
+            m_isGrounded = false; 
+        }
+    }
+
+	void Update ()
+    {
+        m_animator.SetBool("Grounded", m_isGrounded);
+
+        float v = Input.GetAxis("Vertical");
+        float h = Input.GetAxis("Horizontal");
+
+        bool walk = Input.GetKey(KeyCode.LeftShift);
+
+        if (v < 0) 
+        {
+            v *= walk ? m_backwardsWalkScale : m_backwardRunScale;
+        } 
+        else if (walk)
+        {
+            v *= m_walkScale;
+        }
+
+        m_currentV = Mathf.Lerp(m_currentV, v, Time.deltaTime * m_interpolation);
+        m_currentH = Mathf.Lerp(m_currentH, h, Time.deltaTime * m_interpolation);
+
+        transform.position += transform.forward * m_currentV * m_moveSpeed * Time.deltaTime;
+        transform.Rotate(0, m_currentH * m_turnSpeed * Time.deltaTime, 0);
+
+        m_animator.SetFloat("MoveSpeed", m_currentV);
+
+        JumpingAndLanding();
+
+        m_wasGrounded = m_isGrounded;
+    }
+
+    private void JumpingAndLanding()
+    {
+        bool jumpCooldownOver = (Time.time - m_jumpTimeStamp) >= m_minJumpInterval;
+
+        if (jumpCooldownOver && m_isGrounded && Input.GetKey(KeyCode.Space))
+        {
+            m_jumpTimeStamp = Time.time;
+            m_rigidBody.AddForce(Vector3.up * m_jumpForce, ForceMode.Impulse);
+        }
+
+        if (!m_wasGrounded && m_isGrounded)
+        {
+            m_animator.SetTrigger("Land");
+        }
+
+        if (!m_isGrounded && m_wasGrounded)
+        {
+            m_animator.SetTrigger("Jump");
+        }
     }
 }

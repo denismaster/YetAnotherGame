@@ -5,27 +5,47 @@ using UnityEngine;
 public class CameraRotationController : MonoBehaviour
 {
     private GameObject _player;
-    private GameObject _fakeHead;
+
+    private bool firstPointViewEnabled;
+
+    [SerializeField]
+    [Header("First point view camera position")]
+    private Transform firstPointView = null;
+
+    [SerializeField]
+    [Header("Third point view camera position")]
+    private Transform thirdPointView = null;
 
     void Start()
     {
-        //get player and head of player
         _player = GameObject.FindGameObjectWithTag(PlayerConstants.Player);
-        _fakeHead = GameObject.FindGameObjectWithTag(PlayerConstants.FakeHead);
     }
 
     void Update()
     {
-       Rotate();
+        if(Input.GetButtonDown(InputConstants.ChangeView))
+        {
+            firstPointViewEnabled = !firstPointViewEnabled;
+        }
+        var newCameraViewTransform = firstPointViewEnabled ? thirdPointView : firstPointView;
+
+        UpdatePosition(newCameraViewTransform);
+        Rotate(newCameraViewTransform);
     }
     
-    private void Rotate()
+    public void UpdatePosition(Transform newCameraViewTransform)
+    {
+        Camera.main.transform.position = newCameraViewTransform.position;
+        Camera.main.transform.rotation = newCameraViewTransform.rotation;
+    }
+
+    private void Rotate(Transform newCameraViewTransform)
     {
         var horizontalRotation = Input.GetAxis(InputConstants.MouseX);
         var verticalRotation = Input.GetAxis(InputConstants.MouseY);
         
-        //rotate head and body separately
+        //separately rotate: player horizontally and camera point vertically
         _player.transform.Rotate(0, horizontalRotation, 0);
-        _fakeHead.transform.Rotate(-verticalRotation, 0, 0);
+        newCameraViewTransform.Rotate(-verticalRotation, 0, 0);
     }
 }
