@@ -10,8 +10,8 @@ public class CameraRotationController : MonoBehaviour
     void Start()
     {
         //get player and head of player
-        _player = GameObject.FindGameObjectWithTag(Constants.Player);
-        _fakeHead = GameObject.FindGameObjectWithTag(Constants.FakeHead);
+        _player = GameObject.FindGameObjectWithTag(PlayerConstants.Player);
+        _fakeHead = GameObject.FindGameObjectWithTag(PlayerConstants.FakeHead);
     }
 
     void Update()
@@ -21,8 +21,8 @@ public class CameraRotationController : MonoBehaviour
     
     private void Rotate()
     {
-        var horizontalRotation = Input.GetAxis(Constants.MouseX);
-        var verticalRotation = Input.GetAxis(Constants.MouseY);
+        var horizontalRotation = Input.GetAxis(InputConstants.MouseX);
+        var verticalRotation = Input.GetAxis(InputConstants.MouseY);
         
         //rotate head and body separately
         _player.transform.Rotate(0, horizontalRotation, 0);

@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetButtonDown(Constants.ChangeView))
+        if(Input.GetButtonDown(InputConstants.ChangeView))
         {
             firstPointViewEnabled = !firstPointViewEnabled;
         }
