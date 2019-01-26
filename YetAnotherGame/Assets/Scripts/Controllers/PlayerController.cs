@@ -6,8 +6,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _moveSpeed = 2;
     [SerializeField] private float _turnSpeed = 150;
     [SerializeField] private float _jumpForce = 4;
-    [SerializeField] private Animator _animator = null;
-    [SerializeField] private Rigidbody _rigidBody = null;
+    private Animator _animator = null;
+    private Rigidbody _rigidBody = null;
 
     private float _currentV = 0;
     private float _currentH = 0;
@@ -28,6 +28,8 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         Cursor.visible = false;
+        _animator = gameObject.GetComponent<Animator>();
+        _rigidBody = gameObject.GetComponent<Rigidbody>();
     }
 
     private void OnCollisionEnter(Collision collision)
