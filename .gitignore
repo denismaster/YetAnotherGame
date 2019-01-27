@@ -39,3 +39,5 @@ YetAnotherGameBuild/*
 YetAnotherGame_Data/Managed/*
 YetAnotherGame_Data/Resources/*
 YetAnotherGame/ProjectSettings/ProjectVersion.txt
+/YetAnotherGame/Assets/tasks.config
+/YetAnotherGame/Assets/tasks.config.meta
