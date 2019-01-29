@@ -18,7 +18,7 @@ public class CameraRotationController : MonoBehaviour
 
     void Start()
     {
-        _player = GameObject.FindGameObjectWithTag(PlayerConstants.Player);
+        _player = GameObject.FindGameObjectWithTag(TagConstants.Player);
     }
 
     void Update()
@@ -27,7 +27,7 @@ public class CameraRotationController : MonoBehaviour
         {
             firstPointViewEnabled = !firstPointViewEnabled;
         }
-        var newCameraViewTransform = firstPointViewEnabled ? thirdPointView : firstPointView;
+        var newCameraViewTransform = firstPointViewEnabled ? firstPointView : thirdPointView;
 
         UpdatePosition(newCameraViewTransform);
         Rotate(newCameraViewTransform);
