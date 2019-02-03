@@ -2,7 +2,7 @@
 
 public class CoinCollectionController : MonoBehaviour
 {
-    private void OnCollisionEnter(Collision collision)
+    public void OnCollisionEnter(Collision collision)
     {
         if (gameObject.tag == TagConstants.Coin && collision.gameObject.tag == TagConstants.Player)
         {
