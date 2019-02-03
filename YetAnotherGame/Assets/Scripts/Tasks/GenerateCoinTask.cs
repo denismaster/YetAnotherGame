@@ -11,18 +11,17 @@ public class GenerateCoinTask : Task
     private static int _coinsCount = 10;
 
     private static Rect _generationArea;
+    private static UnityEngine.Object _coinPrefab = ResourceUtils.Load(PrefabConstants.Coin);
 
     static GenerateCoinTask()
     {
         try
         {
             _generationArea = GetGenerationArea();
-            UnityEngine.Object coinPrefab = PrefabUtils.Load(PrefabConstants.Coin);
 
             for (int i = 0; i < _coinsCount; i++)
             {
-                var point = GenerateSpawnPoint(_generationArea);
-                GameObject coin = GameObject.Instantiate(coinPrefab, point, new Quaternion()) as GameObject;                
+                GameObject coin = GenerateCoinInRandomPoint();
             }
 
             //todo: use ray cast to determine whether this point is valid on terrain
@@ -32,6 +31,12 @@ public class GenerateCoinTask : Task
         {
             Debug.Log(e.Message);
         }
+    }
+
+    private static GameObject GenerateCoinInRandomPoint()
+    {
+        var point = GenerateSpawnPoint(_generationArea);
+        return GameObject.Instantiate(_coinPrefab, point, new Quaternion()) as GameObject;
     }
 
     private static Rect GetGenerationArea()
@@ -54,8 +59,7 @@ public class GenerateCoinTask : Task
 
         while(currentCoinsCount < _coinsCount)
         {
-            //add coins to scene after some of them will be collected
-
+            GenerateCoinInRandomPoint();
             currentCoinsCount++;
         }
     }
