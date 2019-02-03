@@ -1,0 +1,9 @@
+{
+    "tasks": 
+	[
+        {
+            "taskName": "GenerateCoinTask",
+            "interval": 5
+        }
+	]
+}
