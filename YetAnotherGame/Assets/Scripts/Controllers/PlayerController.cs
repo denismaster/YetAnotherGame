@@ -158,6 +158,6 @@ public class PlayerController : MonoBehaviour
     private void SetScore(int score){
         _score = score;
 
-        _scoreText.text = string.Format("Score: {0}", _score);
+        _scoreText.text = $"Score: {_score}";
     }
 }
