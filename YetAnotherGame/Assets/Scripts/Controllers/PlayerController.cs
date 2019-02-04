@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour
@@ -25,15 +26,24 @@ public class PlayerController : MonoBehaviour
     private Vector3 _currentDirection = Vector3.zero;
     private List<Collider> _collisions = new List<Collider>();
 
+    private int _score;
+    public Text _scoreText;
+
     private void Start()
     {
         Cursor.visible = false;
         _animator = gameObject.GetComponent<Animator>();
         _rigidBody = gameObject.GetComponent<Rigidbody>();
+
+        SetScore(0);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (collision.gameObject.tag == TagConstants.Coin)
+        {
+            SetScore(_score+1);
+        }
         ContactPoint[] contactPoints = collision.contacts;
         for(int i = 0; i < contactPoints.Length; i++)
         {
@@ -143,5 +153,11 @@ public class PlayerController : MonoBehaviour
         {
             _animator.SetTrigger("Jump");
         }
+    }
+
+    private void SetScore(int score){
+        _score = score;
+
+        _scoreText.text = $"Score: {_score}";
     }
 }
