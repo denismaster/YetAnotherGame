@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 [Serializable]
-public class Tasks
+public class TaskRunnerSettings
 {
     public List<TaskSettings> tasks;
 

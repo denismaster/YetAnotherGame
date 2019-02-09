@@ -6,14 +6,11 @@ using UnityEngine;
 public class GenerateCoinTask : Task
 {
     public override string taskName { get; set; } = "GenerateCoinTask";
-
-    //todo: move it to game.config
-    private static int _coinsCount = 10;
-
+    private static int _coinsCount = Settings.gameSettings.objectGeneration.coinsCount;
     private static Rect _generationArea;
     private static UnityEngine.Object _coinPrefab = ResourceUtils.Load(PrefabConstants.Coin);
 
-    static GenerateCoinTask()
+    public GenerateCoinTask()
     {
         try
         {
@@ -43,7 +40,9 @@ public class GenerateCoinTask : Task
     {
         var leftBottomBorderPoint = GameObject.FindGameObjectWithTag("LeftBottom");
         var start = new Vector2(leftBottomBorderPoint.transform.position.x, leftBottomBorderPoint.transform.position.z);
-        return new Rect(start, new Vector2(60,60));
+        var xSize = Settings.gameSettings.objectGeneration.gameObjectsGenerationAreaXsize;
+        var ySize = Settings.gameSettings.objectGeneration.gameObjectsGenerationAreaYsize;
+        return new Rect(start, new Vector2(xSize, ySize));
     }
 
     private static Vector3 GenerateSpawnPoint(Rect generationArea)

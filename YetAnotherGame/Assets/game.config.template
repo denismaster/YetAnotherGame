@@ -1,0 +1,8 @@
+{
+    "objectGeneration":
+	{
+        "coinsCount": 20,
+        "gameObjectsGenerationAreaXsize": 80,
+        "gameObjectsGenerationAreaYsize": 80
+    }
+}
