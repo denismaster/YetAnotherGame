@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
     private int _hp = 0;
     public Text _hpText;
 
-    private Slider _healthBar;
+    private Slider _healthBar = null;
 
     private void Start()
     {
@@ -205,7 +205,6 @@ public class PlayerController : MonoBehaviour
     private void AddHp(int hp)
     {
         _hp = Mathf.Clamp(_hp + hp, 0, Settings.gameSettings.player.startingHp);
-
         _hpText.text = $"Health: {_hp}/{Settings.gameSettings.player.startingHp}";
 
         if(_healthBar != null)
