@@ -4,5 +4,17 @@
         "coinsCount": 20,
         "gameObjectsGenerationAreaXsize": 80,
         "gameObjectsGenerationAreaYsize": 80
+    },
+    "damage":
+	{
+        "mine": 20
+    },
+    "heal":
+	{
+        "turkey": 20
+    },
+    "player":
+	{
+        "startingHp": 100
     }
 }
