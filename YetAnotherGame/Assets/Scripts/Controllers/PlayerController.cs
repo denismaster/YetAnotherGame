@@ -13,12 +13,14 @@ public class PlayerController : MonoBehaviour
     private float _currentV = 0;
     private float _currentH = 0;
 
+    //todo: move this constants to game settings
     private readonly float _interpolation = 10;
     private readonly float _walkScale = 0.33f;
     private readonly float _backwardsWalkScale = 0.16f;
     private readonly float _backwardRunScale = 0.66f;
     private float _jumpTimeStamp = 0;
     private float _minJumpInterval = 0.25f;
+    //todo: move this constants to game settings
 
     private bool _wasGrounded;
     private bool _isGrounded;
@@ -29,21 +31,59 @@ public class PlayerController : MonoBehaviour
     private int _score;
     public Text _scoreText;
 
+    private int _hp = 0;
+    public Text _hpText;
+
+    private Slider _healthBar = null;
+
     private void Start()
     {
         Cursor.visible = false;
         _animator = gameObject.GetComponent<Animator>();
         _rigidBody = gameObject.GetComponent<Rigidbody>();
 
-        SetScore(0);
+        AddScore(0);
+        AddHp(Settings.gameSettings.player.startingHp);
+
+        //todo: review this in multiplayer mode
+        _healthBar = GameObject.FindObjectOfType<Slider>();
+        if(_healthBar == null)
+        {
+            Debug.LogError($"health bar not found");
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == TagConstants.Coin)
+        switch(collision.gameObject.tag)
         {
-            SetScore(_score+1);
+            case TagConstants.Coin: 
+            {
+                SoundManagerController.Play(SoundConstants.CoinCollect);
+                Destroy(collision.gameObject);
+                AddScore(1);
+                break;
+            }
+            case TagConstants.Mine: 
+            {
+                SoundManagerController.Play(SoundConstants.MineExplosion);
+                Destroy(collision.gameObject);
+                AddHp(-Settings.gameSettings.damage.mine);
+                break;
+            }
+            case TagConstants.Turkey:
+            {
+                SoundManagerController.Play(SoundConstants.EatTurkey);
+                Destroy(collision.gameObject);
+                AddHp(Settings.gameSettings.heal.turkey);
+                break;
+            }
+            default: 
+            {
+                break;
+            }
         }
+
         ContactPoint[] contactPoints = collision.contacts;
         for(int i = 0; i < contactPoints.Length; i++)
         {
@@ -155,9 +195,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void SetScore(int score){
-        _score = score;
+    private void AddScore(int score)
+    {
+        _score += score;
 
         _scoreText.text = $"Score: {_score}";
+    }
+
+    private void AddHp(int hp)
+    {
+        _hp = Mathf.Clamp(_hp + hp, 0, Settings.gameSettings.player.startingHp);
+        _hpText.text = $"Health: {_hp}/{Settings.gameSettings.player.startingHp}";
+
+        if(_healthBar != null)
+        {
+            _healthBar.value = _hp;
+        }
     }
 }
