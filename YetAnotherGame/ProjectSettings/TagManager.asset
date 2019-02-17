@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Coin
   - LeftBottom
+  - SoundManager
+  - Mine
+  - Turkey
   layers:
   - Default
   - TransparentFX

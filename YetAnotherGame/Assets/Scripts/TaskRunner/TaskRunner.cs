@@ -7,28 +7,14 @@ using UnityEngine;
 
 public class TaskRunner : MonoBehaviour
 {
+    private const string _tasksConfigFilename = "tasks.config";
     private void Awake()
     {
         try
         {
             RegisterTasks();
 
-            var path = $"{Application.dataPath}/tasks.config";
-            if(!File.Exists(path))
-            {
-                Debug.LogError($"Filepath {path} does not exist.");
-                return;
-            }
-
-            string settings = File.ReadAllText(path);
-            if(settings.Length == 0)
-            {
-                Debug.LogError($"File {path} is empty.");
-                return;
-            }
-            var taskSettingsList = JsonUtility.FromJson<Tasks>(settings);
-
-            foreach(var taskSettings in taskSettingsList.tasks)
+            foreach(var taskSettings in Settings.taskRunnerSettings.tasks)
             {
                 Task task = RegisteredTasks.GetTask(taskSettings.taskName);
                 if(task == null)
