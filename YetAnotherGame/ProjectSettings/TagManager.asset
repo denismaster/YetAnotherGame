@@ -9,6 +9,7 @@ TagManager:
   - SoundManager
   - Mine
   - Turkey
+  - Door
   layers:
   - Default
   - TransparentFX
