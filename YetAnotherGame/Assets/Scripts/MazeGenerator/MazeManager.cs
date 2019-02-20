@@ -18,8 +18,6 @@ public class MazeManager : MonoBehaviour {
 		mazeInstance = Instantiate(mazePrefab) as Maze;
 		
 		mazeInstance.Generate();
-		// playerInstance = Instantiate(playerPrefab) as Player;
-		// playerInstance.SetLocation(mazeInstance.GetCell(mazeInstance.RandomCoordinates));
 	}
 
 }
