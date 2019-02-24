@@ -45,6 +45,21 @@ public class Maze : MonoBehaviour {
 		while (activeCells.Count > 0) {
 			DoNextGenerationStep(activeCells);
 		}
+		GenerateEntranceInTheWall();
+
+	}
+
+	private void GenerateEntranceInTheWall()
+	{
+		var firstEntrance = GameObject.Find("Maze Cell 0, 14");
+		var secondEntrance = GameObject.Find("Maze Cell 10, 0");
+		var thirdEntrance = GameObject.Find("Maze Cell 24, 14");
+		var forthEntrance = GameObject.Find("Maze Cell 12, 24");
+
+		Destroy(firstEntrance);
+		Destroy(secondEntrance);
+		Destroy(thirdEntrance);
+		Destroy(forthEntrance);
 	}
 
 	private void DoFirstGenerationStep (List<MazeCell> activeCells) {
