@@ -29,16 +29,16 @@ public class DoorOpenerController : MonoBehaviour
             _open = !_open;
         }
     }
-    private void OnCollisionEnter(Collision collide)
+    private void OnTriggerEnter(Collider trigger)
     {
-        if (collide.collider)
+        if (!trigger.isTrigger)
         {
             _enter = true;
         }
     }
-    private void OnCollisionExit(Collision collide)
+    private void OnTriggerExit(Collider trigger)
     {
-        if (!collide.collider)
+        if (!trigger.isTrigger)
         { 
             _enter = false; 
         }

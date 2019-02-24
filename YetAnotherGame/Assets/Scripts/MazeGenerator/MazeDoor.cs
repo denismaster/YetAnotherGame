@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
-public class MazeDoor : MazePassage {
+public class MazeDoor : MazePassage
+ {
 
 	private static Quaternion
 		normalRotation = Quaternion.Euler(0f, -90f, 0f),
@@ -31,15 +32,5 @@ public class MazeDoor : MazePassage {
 				child.GetComponent<Renderer>().material = cell.room.settings.wallMaterial;
 			}
 		}
-	}
-
-	public override void OnPlayerEntered () {
-		OtherSideOfDoor.hinge.localRotation = hinge.localRotation = isMirrored ? mirroredRotation : normalRotation;
-		OtherSideOfDoor.cell.room.Show();
-	}
-	
-	public override void OnPlayerExited () {
-		OtherSideOfDoor.hinge.localRotation = hinge.localRotation = Quaternion.identity;
-		OtherSideOfDoor.cell.room.Hide();
 	}
 }
