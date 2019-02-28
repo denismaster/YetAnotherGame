@@ -32,6 +32,8 @@ public class PlayerController : MonoBehaviour
     private int _score;
     public Text _scoreText;
 
+    public Text deathText;
+
     private int _hp = 0;
     public Text _hpText;
 
@@ -208,6 +210,11 @@ public class PlayerController : MonoBehaviour
     {
         _hp = Mathf.Clamp(_hp + hp, 0, Settings.gameSettings.player.startingHp);
         _hpText.text = $"Health: {_hp}/{Settings.gameSettings.player.startingHp}";
+
+        if(_hp==0){
+            Time.timeScale = 0f;
+            deathText.gameObject.SetActive(true);
+        }
 
         if(_healthBar != null)
         {
