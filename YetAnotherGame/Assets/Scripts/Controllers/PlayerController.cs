@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     private float _currentV = 0;
     private float _currentH = 0;
 
+
     //todo: move this constants to game settings
     private readonly float _interpolation = 10;
     private readonly float _walkScale = 0.33f;
@@ -86,6 +87,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        
         ContactPoint[] contactPoints = collision.contacts;
         for(int i = 0; i < contactPoints.Length; i++)
         {
