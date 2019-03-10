@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEngine.Networking;
+using System.Linq;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
     [SerializeField] private float _moveSpeed = 2;
     [SerializeField] private float _turnSpeed = 150;
@@ -38,14 +40,32 @@ public class PlayerController : MonoBehaviour
 
     private Slider _healthBar = null;
 
+    public override void OnStartLocalPlayer()
+    {
+        var firstPointView = gameObject.transform.Find("FirstPointView");
+        var thirdPointView = gameObject.transform.Find("ThirdPointView");        
+
+        gameObject.GetComponent<CameraRotationController>().setPointViews(this.gameObject, firstPointView, thirdPointView);
+    }
+
     private void Start()
     {
         Cursor.visible = false;
         _animator = gameObject.GetComponent<Animator>();
         _rigidBody = gameObject.GetComponent<Rigidbody>();
 
-        AddScore(0);
-        AddHp(Settings.gameSettings.player.startingHp);
+        var playerInfo = GameObject.FindObjectsOfType<UnityEngine.UI.Text>();
+
+        _scoreText =  playerInfo.SingleOrDefault(i => i.name == "Score counter");
+        if(_scoreText != null)
+        {
+            AddScore(0);    
+        }
+        _hpText =  playerInfo.SingleOrDefault(i => i.name == "HP");
+        if(_hpText != null)
+        {
+            AddHp(Settings.gameSettings.player.startingHp);
+        }
 
         //todo: review this in multiplayer mode
         _healthBar = GameObject.FindObjectOfType<Slider>();
@@ -147,6 +167,11 @@ public class PlayerController : MonoBehaviour
 
 	void Update ()
     {
+        if (!isLocalPlayer)
+        {
+            return;
+        }
+
         _animator.SetBool("Grounded", _isGrounded);
 
         float v = Input.GetAxis("Vertical");

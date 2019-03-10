@@ -1,28 +1,35 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class CameraRotationController : MonoBehaviour
+public class CameraRotationController : NetworkBehaviour
 {
     private GameObject _player;
 
     private bool firstPointViewEnabled;
 
-    [SerializeField]
-    [Header("First point view camera position")]
     private Transform firstPointView = null;
 
-    [SerializeField]
-    [Header("Third point view camera position")]
     private Transform thirdPointView = null;
 
-    void Start()
+    public void setPointViews(GameObject player, Transform fpv, Transform tpv)
     {
-        _player = GameObject.FindGameObjectWithTag(TagConstants.Player);
+        _player = player;
+        firstPointView = fpv;
+        thirdPointView = tpv;
     }
 
     void Update()
     {
+        if (!isLocalPlayer)
+        {
+            return;
+        }
+        if(firstPointView == null || thirdPointView == null)
+        {
+            return;
+        }
         if(Input.GetButtonDown(InputConstants.ChangeView))
         {
             firstPointViewEnabled = !firstPointViewEnabled;
