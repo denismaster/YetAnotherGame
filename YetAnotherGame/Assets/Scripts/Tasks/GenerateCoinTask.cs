@@ -9,15 +9,19 @@ public class GenerateCoinTask : Task
     public override string taskName { get; set; } = "GenerateCoinTask";
     private static int _coinsCount = Settings.gameSettings.objectGeneration.coinsCount;
     private static Rect _generationArea;
-    private static UnityEngine.Object _coinPrefab = ResourceUtils.Load(PrefabConstants.Coin);
-    private static UnityEngine.Object _minePrefab = ResourceUtils.Load(PrefabConstants.Mine);
-    private static UnityEngine.Object _turkeyPrefab = ResourceUtils.Load(PrefabConstants.Turkey);
+    private static UnityEngine.GameObject _coinPrefab = ResourceUtils.Load(PrefabConstants.Coin) as GameObject;
+    private static UnityEngine.GameObject _minePrefab = ResourceUtils.Load(PrefabConstants.Mine) as GameObject;
+    private static UnityEngine.GameObject _turkeyPrefab = ResourceUtils.Load(PrefabConstants.Turkey) as GameObject;
 
     public GenerateCoinTask()
     {
         try
         {
             _generationArea = GetGenerationArea();
+
+            PoolManager.WarmPool(_coinPrefab, 10);
+            PoolManager.WarmPool(_minePrefab, 10);
+            PoolManager.WarmPool(_turkeyPrefab, 10);
 
             //todo: _coinsCount must influece only on coins count
             for (int i = 0; i < _coinsCount; i++)
@@ -43,7 +47,7 @@ public class GenerateCoinTask : Task
         //todo: use model's parameters
         point.y = 0.3f;
 
-        return GameObject.Instantiate(_coinPrefab, point, new Quaternion()) as GameObject;
+        return PoolManager.SpawnObject(_coinPrefab, point, new Quaternion());
     }
 
     private static GameObject GenerateMineInRandomPoint()
@@ -53,7 +57,7 @@ public class GenerateCoinTask : Task
         //todo: use model's parameters
         point.y = -0.02f;
 
-        return GameObject.Instantiate(_minePrefab, point, new Quaternion()) as GameObject;
+        return  PoolManager.SpawnObject(_minePrefab, point, new Quaternion());
     }
 
     private static GameObject GenerateTurkeyInRandomPoint()
@@ -63,7 +67,7 @@ public class GenerateCoinTask : Task
         //todo: use model's parameters
         point.y = 0.2f;
 
-        return GameObject.Instantiate(_turkeyPrefab, point, new Quaternion(0f, 15f, 0f, 0f)) as GameObject;
+        return  PoolManager.SpawnObject(_turkeyPrefab, point, new Quaternion(0f, 15f, 0f, 0f));
     }
 
     private static Rect GetGenerationArea()

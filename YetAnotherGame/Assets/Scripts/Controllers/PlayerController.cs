@@ -62,21 +62,21 @@ public class PlayerController : MonoBehaviour
             case TagConstants.Coin: 
             {
                 SoundManagerController.Play(SoundConstants.CoinCollect);
-                Destroy(collision.gameObject);
+                PoolManager.ReleaseObject(collision.gameObject);
                 AddScore(1);
                 break;
             }
             case TagConstants.Mine: 
             {
                 SoundManagerController.Play(SoundConstants.MineExplosion);
-                Destroy(collision.gameObject);
+                PoolManager.ReleaseObject(collision.gameObject);
                 AddHp(-Settings.gameSettings.damage.mine);
                 break;
             }
             case TagConstants.Turkey:
             {
                 SoundManagerController.Play(SoundConstants.EatTurkey);
-                Destroy(collision.gameObject);
+                PoolManager.ReleaseObject(collision.gameObject);
                 AddHp(Settings.gameSettings.heal.turkey);
                 break;
             }
